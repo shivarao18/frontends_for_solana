@@ -1,0 +1,39 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "ping": "node scripts/ping.js",
+    "send": "node scripts/send.js",
+    "server": "nodemon pages/api/index.js"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.6.6",
+    "@heroicons/react": "^1.0.6",
+    "@project-serum/borsh": "^0.2.5",
+    "@solana/spl-token": "^0.2.0",
+    "@solana/wallet-adapter-base": "^0.9.7",
+    "@solana/wallet-adapter-react": "^0.15.6",
+    "@solana/wallet-adapter-react-ui": "^0.9.8",
+    "@solana/wallet-adapter-wallets": "^0.16.6",
+    "@solana/web3.js": "^1.47.3",
+    "axios": "^1.6.7",
+    "bs58": "^5.0.0",
+    "dotenv": "^16.0.1",
+    "next": "latest",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-toastify": "^9.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "17.0.35",
+    "@types/react": "18.0.9",
+    "@types/react-dom": "18.0.5",
+    "autoprefixer": "^10.4.7",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.1.2",
+    "typescript": "4.7.2"
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+}
