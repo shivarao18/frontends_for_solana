@@ -124,7 +124,7 @@ const Starter = () => {
                                                     <div className='text-slate-300 text-sm'>SOL</div>
                                                     {balance !== null && balance > 0 && (
                                                         <div className='mt-3 text-xs text-slate-400'>
-                                                            ≈ ${(balance * 23.5).toFixed(2)} USD
+                                                            ≈ ${(balance * 148.61).toFixed(2)} USD
                                                         </div>
                                                     )}
                                                 </div>
