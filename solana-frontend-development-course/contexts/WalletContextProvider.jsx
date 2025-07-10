@@ -6,7 +6,11 @@ require('@solana/wallet-adapter-react-ui/styles.css');
 
 const WalletContextProvider = ({ children }) => {
 
-    const endpoint = web3.clusterApiUrl('devnet');
+    // Use a more reliable devnet endpoint - try multiple options
+    const endpoint = process.env.NEXT_PUBLIC_RPC_ENDPOINT ||
+        'https://api.devnet.solana.com' ||
+        web3.clusterApiUrl('devnet');
+
     const wallets = [
         new walletAdapterWallets.PhantomWalletAdapter()
     ];

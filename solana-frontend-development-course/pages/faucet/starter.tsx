@@ -86,6 +86,14 @@ const Starter = () => {
         setIsLoading(true);
 
         try {
+            // Debug: Log connection endpoint
+            console.log('Using RPC endpoint:', connection.rpcEndpoint);
+
+            // Test connection first
+            toast.info('Testing connection to Solana network...');
+            const slot = await connection.getSlot();
+            console.log('Connected! Current slot:', slot);
+
             // STEP 1: Create a temporary keypair that will send SOL to the user
             // This is like creating a temporary wallet that will fund the user's wallet
             const sender = web3.Keypair.generate();
@@ -98,10 +106,18 @@ const Starter = () => {
                 toast.info('Requesting airdrop for funding wallet...');
 
                 // Request 2 SOL from the devnet faucet for our temporary wallet
-                await connection.requestAirdrop(sender.publicKey, web3.LAMPORTS_PER_SOL * 2);
+                const airdropSignature = await connection.requestAirdrop(
+                    sender.publicKey,
+                    web3.LAMPORTS_PER_SOL * 2
+                );
 
-                // Wait a moment for the airdrop to be processed
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                // Wait for airdrop confirmation
+                await connection.confirmTransaction({
+                    signature: airdropSignature,
+                    blockhash: (await connection.getLatestBlockhash()).blockhash,
+                    lastValidBlockHeight: (await connection.getLatestBlockhash()).lastValidBlockHeight,
+                });
+                console.log('Airdrop confirmed!');
             }
 
             // STEP 3: Create a transaction to transfer SOL from temporary wallet to user
@@ -131,7 +147,17 @@ const Starter = () => {
         } catch (err: any) {
             // Handle any errors that occurred during the process
             console.error('Funding error:', err);
-            const errorMsg = err.message || 'Failed to fund wallet. Please try again.';
+            let errorMsg = 'Failed to fund wallet. Please try again.';
+
+            // Provide more specific error messages
+            if (err.message?.includes('Method not found')) {
+                errorMsg = 'RPC endpoint error. The network might be experiencing issues. Please try again later.';
+            } else if (err.message?.includes('airdrop')) {
+                errorMsg = 'Airdrop failed. The devnet faucet might be rate limited. Please try again in a few minutes.';
+            } else if (err.message) {
+                errorMsg = err.message;
+            }
+
             toast.error(errorMsg);
             setError(errorMsg);
         } finally {
@@ -177,6 +203,11 @@ const Starter = () => {
                 <p className="text-sm text-green-300 mt-2">
                     {publicKey.toString().slice(0, 8)}...{publicKey.toString().slice(-8)}
                 </p>
+                {connection && (
+                    <p className="text-xs text-green-400 mt-1">
+                        Network: {connection.rpcEndpoint.includes('devnet') ? 'Devnet' : 'Unknown'}
+                    </p>
+                )}
             </div>
         );
     };
